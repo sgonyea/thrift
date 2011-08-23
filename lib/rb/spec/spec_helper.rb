@@ -18,15 +18,14 @@
 #
 
 require 'rubygems'
-require 'spec'
+require 'bundler/setup'
 
-$:.unshift File.join(File.dirname(__FILE__), *%w[.. ext])
+Bundler.require :default
+Bundler.require :test
 
-# pretend we already loaded fastthread, otherwise the nonblocking_server_spec
-# will get screwed up
-# $" << 'fastthread.bundle'
-
-require File.dirname(__FILE__) + '/../lib/thrift'
+Dir[ Bundler.root.join('spec/support/**/*.rb') ].each do |file|
+  require file
+end
 
 class Object
   # tee is a useful method, so let's let our tests have it
@@ -35,11 +34,10 @@ class Object
     self
   end
 end
-
-Spec::Runner.configure do |configuration|
-  configuration.before(:each) do
+RSpec.configure do |cfg|
+  cfg.before(:each) {
     Thrift.type_checking = true
-  end
+  }
 end
 
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. debug_proto_test gen-rb])
