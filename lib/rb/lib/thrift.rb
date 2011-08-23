@@ -20,8 +20,6 @@
 # Please see doc/old-thrift-license.txt in the Thrift distribution for
 # details.
 
-$:.unshift File.dirname(__FILE__)
-
 require 'thrift/core_ext'
 require 'thrift/exceptions'
 require 'thrift/types'
