@@ -17,13 +17,12 @@
 # under the License.
 #
 
-require File.dirname(__FILE__) + '/spec_helper'
-require File.dirname(__FILE__) + '/binary_protocol_spec_shared'
+require 'spec_helper'
 
-class ThriftBinaryProtocolSpec < Spec::ExampleGroup
+describe Thrift do
   include Thrift
 
-  describe BinaryProtocol do
+  describe Thrift::BinaryProtocol do
     it_should_behave_like 'a binary protocol'
 
     def protocol_class
@@ -53,7 +52,7 @@ class ThriftBinaryProtocolSpec < Spec::ExampleGroup
     end
   end
 
-  describe BinaryProtocolFactory do
+  describe Thrift::BinaryProtocolFactory do
     it "should create a BinaryProtocol" do
       BinaryProtocolFactory.new.get_protocol(mock("MockTransport")).should be_instance_of(BinaryProtocol)
     end

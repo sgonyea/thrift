@@ -17,7 +17,7 @@
 # under the License.
 #
 
-require File.dirname(__FILE__) + '/spec_helper'
+require 'spec_helper'
 
 describe Thrift::CompactProtocol do
   TESTS = {

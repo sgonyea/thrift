@@ -17,12 +17,12 @@
 # under the License.
 #
 
-require File.dirname(__FILE__) + '/spec_helper'
+require 'spec_helper'
 
-class ThriftHTTPClientTransportSpec < Spec::ExampleGroup
-  include Thrift
-
+module Thrift
   describe HTTPClientTransport do
+    include Thrift
+
     before(:each) do
       @client = HTTPClientTransport.new("http://my.domain.com/path/to/service?param=value")
     end

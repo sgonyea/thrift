@@ -17,30 +17,25 @@
 # under the License.
 #
 
-require File.dirname(__FILE__) + '/spec_helper'
-require File.dirname(__FILE__) + '/binary_protocol_spec_shared'
+require 'spec_helper'
+require Bundler.root.join('spec/thrift/binary_protocol_spec_shared')
 
-if defined? Thrift::BinaryProtocolAccelerated
+describe Thrift do
+  include Thrift
 
-  class ThriftBinaryProtocolAcceleratedSpec < Spec::ExampleGroup
-    include Thrift
+  describe Thrift::BinaryProtocolAccelerated do
+    # since BinaryProtocolAccelerated should be directly equivalent to 
+    # BinaryProtocol, we don't need any custom specs!
+    it_should_behave_like 'a binary protocol'
 
-    describe Thrift::BinaryProtocolAccelerated do
-      # since BinaryProtocolAccelerated should be directly equivalent to 
-      # BinaryProtocol, we don't need any custom specs!
-      it_should_behave_like 'a binary protocol'
-
-      def protocol_class
-        BinaryProtocolAccelerated
-      end
-    end
-
-    describe BinaryProtocolAcceleratedFactory do
-      it "should create a BinaryProtocolAccelerated" do
-        BinaryProtocolAcceleratedFactory.new.get_protocol(mock("MockTransport")).should be_instance_of(BinaryProtocolAccelerated)
-      end
+    def protocol_class
+      BinaryProtocolAccelerated
     end
   end
-else
-  puts "skipping BinaryProtocolAccelerated spec because it is not defined."
+
+  describe Thrift::BinaryProtocolAcceleratedFactory do
+    it "should create a BinaryProtocolAccelerated" do
+      BinaryProtocolAcceleratedFactory.new.get_protocol(mock("MockTransport")).should be_instance_of(BinaryProtocolAccelerated)
+    end
+  end
 end

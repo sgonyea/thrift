@@ -17,13 +17,13 @@
 # under the License.
 #
 
-require File.dirname(__FILE__) + '/spec_helper'
+require 'spec_helper'
 
-class ThriftUnionSpec < Spec::ExampleGroup
+describe "ThriftUnionSpec" do
   include Thrift
   include SpecNamespace
 
-  describe Union do
+  describe Thrift::Union do
     it "should return nil value in unset union" do
       union = My_union.new
       union.get_set_field.should == nil

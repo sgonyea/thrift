@@ -17,45 +17,47 @@
 # under the License.
 #
 
-require File.dirname(__FILE__) + '/spec_helper'
+require 'spec_helper'
 require File.dirname(__FILE__) + "/socket_spec_shared"
 
-class ThriftSocketSpec < Spec::ExampleGroup
-  include Thrift
+module Thrift
+  describe "ThriftSocketSpec" do
+    include Thrift
 
-  describe Socket do
-    before(:each) do
-      @socket = Socket.new
-      @handle = mock("Handle", :closed? => false)
-      @handle.stub!(:close)
-      @handle.stub!(:connect_nonblock)
-      ::Socket.stub!(:new).and_return(@handle)
-    end
+    describe Socket do
+      before(:each) do
+        @socket = Socket.new
+        @handle = mock("Handle", :closed? => false)
+        @handle.stub!(:close)
+        @handle.stub!(:connect_nonblock)
+        ::Socket.stub!(:new).and_return(@handle)
+      end
 
-    it_should_behave_like "a socket"
+      it_should_behave_like "a socket"
 
-    it "should raise a TransportException when it cannot open a socket" do
-      ::Socket.should_receive(:new).and_raise(StandardError)
-      lambda { @socket.open }.should raise_error(Thrift::TransportException) { |e| e.type.should == Thrift::TransportException::NOT_OPEN }
-    end
+      it "should raise a TransportException when it cannot open a socket" do
+        ::Socket.should_receive(:new).and_raise(StandardError)
+        lambda { @socket.open }.should raise_error(Thrift::TransportException) { |e| e.type.should == Thrift::TransportException::NOT_OPEN }
+      end
 
-    it "should open a ::Socket with default args" do
-      ::Socket.should_receive(:new).and_return(mock("Handle", :connect_nonblock => true))
-      ::Socket.should_receive(:getaddrinfo).with("localhost", 9090).and_return([[]])
-      ::Socket.should_receive(:sockaddr_in)
-      @socket.open
-    end
+      it "should open a ::Socket with default args" do
+        ::Socket.should_receive(:new).and_return(mock("Handle", :connect_nonblock => true))
+        ::Socket.should_receive(:getaddrinfo).with("localhost", 9090).and_return([[]])
+        ::Socket.should_receive(:sockaddr_in)
+        @socket.open
+      end
 
-    it "should accept host/port options" do
-      ::Socket.should_receive(:new).and_return(mock("Handle", :connect_nonblock => true))
-      ::Socket.should_receive(:getaddrinfo).with("my.domain", 1234).and_return([[]])
-      ::Socket.should_receive(:sockaddr_in)
-      Socket.new('my.domain', 1234).open
-    end
+      it "should accept host/port options" do
+        ::Socket.should_receive(:new).and_return(mock("Handle", :connect_nonblock => true))
+        ::Socket.should_receive(:getaddrinfo).with("my.domain", 1234).and_return([[]])
+        ::Socket.should_receive(:sockaddr_in)
+        Socket.new('my.domain', 1234).open
+      end
 
-    it "should accept an optional timeout" do
-      ::Socket.stub!(:new)
-      Socket.new('localhost', 8080, 5).timeout.should == 5
+      it "should accept an optional timeout" do
+        ::Socket.stub!(:new)
+        Socket.new('localhost', 8080, 5).timeout.should == 5
+      end
     end
   end
 end
