@@ -13,23 +13,18 @@ Gem::Specification.new do |s|
 
   s.extensions = ['ext/extconf.rb']
 
-  s.has_rdoc = true
-  s.extra_rdoc_files  = %w[CHANGELOG README ext/binary_protocol_accelerated.c ext/binary_protocol_accelerated.h ext/compact_protocol.c ext/compact_protocol.h ext/constants.h ext/extconf.rb ext/macros.h ext/memory_buffer.c ext/memory_buffer.h ext/protocol.c ext/protocol.h ext/struct.c ext/struct.h ext/thrift_native.c lib/thrift.rb lib/thrift/client.rb lib/thrift/core_ext.rb lib/thrift/exceptions.rb lib/thrift/processor.rb lib/thrift/struct.rb lib/thrift/struct_union.rb lib/thrift/union.rb lib/thrift/thrift_native.rb lib/thrift/types.rb lib/thrift/core_ext/fixnum.rb lib/thrift/protocol/base_protocol.rb lib/thrift/protocol/binary_protocol.rb lib/thrift/protocol/binary_protocol_accelerated.rb lib/thrift/protocol/compact_protocol.rb lib/thrift/serializer/deserializer.rb lib/thrift/serializer/serializer.rb lib/thrift/server/base_server.rb lib/thrift/server/mongrel_http_server.rb lib/thrift/server/nonblocking_server.rb lib/thrift/server/simple_server.rb lib/thrift/server/thread_pool_server.rb lib/thrift/server/threaded_server.rb lib/thrift/transport/base_server_transport.rb lib/thrift/transport/base_transport.rb lib/thrift/transport/buffered_transport.rb lib/thrift/transport/framed_transport.rb lib/thrift/transport/http_client_transport.rb lib/thrift/transport/io_stream_transport.rb lib/thrift/transport/memory_buffer_transport.rb lib/thrift/transport/server_socket.rb lib/thrift/transport/socket.rb lib/thrift/transport/unix_server_socket.rb lib/thrift/transport/unix_socket.rb]
-  s.rdoc_options      = %w[--line-numbers --inline-source --title Thrift --main README]
+  s.has_rdoc      = true
+  s.rdoc_options  = %w[--line-numbers --inline-source --title Thrift --main README]
 
   s.rubyforge_project = 'thrift'
 
-  if ENV['GIT']
-    s.files         = `git ls-files`.split("\n")
-    s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-    s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  else
-    all_files = `svn ls --depth infinity`.split("\n")
+  dir = File.expand_path(File.dirname(__FILE__))
 
-    s.files = all_files
-    s.test_files = all_files.grep(/^(test|spec|features)/)
-    s.executables = all_files.grep(/^bin/)
-  end
+  s.files = Dir[ File.join(dir, '**/*') ]
+  s.test_files = Dir[ File.join(dir, '{test,spec,features}/**/*') ]
+  s.executables = Dir[ File.join(dir, 'bin/**/*') ]
+
+  s.extra_rdoc_files  = %w[CHANGELOG README] + Dir[ File.join(dir, '{ext,lib}/**/*.{c,h,rb}') ]
 
   s.require_paths = %w[lib ext]
 
