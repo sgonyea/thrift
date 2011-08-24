@@ -23,6 +23,11 @@ require 'bundler/setup'
 Bundler.require :default
 Bundler.require :test
 
+require 'thrift'
+
+$:.unshift Bundler.root.join('spec/support/').to_s
+$:.unshift Bundler.root.join('debug_proto_test/').to_s
+
 Dir[ Bundler.root.join('spec/support/**/*.rb') ].each do |file|
   require file
 end
@@ -40,11 +45,9 @@ RSpec.configure do |cfg|
   }
 end
 
-$:.unshift File.join(File.dirname(__FILE__), *%w[.. debug_proto_test gen-rb])
 require "srv"
 require "debug_proto_test_constants"
 
-$:.unshift File.join(File.dirname(__FILE__), *%w[gen-rb])
 require 'thrift_spec_types'
 require 'nonblocking_service'
 
