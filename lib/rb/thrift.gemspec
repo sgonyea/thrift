@@ -19,9 +19,6 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = 'thrift'
 
-  pwd = File.expand_path(File.dirname(__FILE__))
-  all_files = Dir[ File.join(pwd, '**/*') ]
-
   if ENV['GIT']
     s.files         = `git ls-files`.split("\n")
     s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
