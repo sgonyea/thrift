@@ -19,13 +19,22 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = 'thrift'
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = %w[lib ext]
+  pwd = File.expand_path(File.dirname(__FILE__))
+  all_files = Dir[ File.join(pwd, '**/*') ]
 
-  # specify any dependencies here; for example:
-  # s.add_runtime_dependency "rest-client"
+  if ENV['GIT']
+    s.files         = `git ls-files`.split("\n")
+    s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+    s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  else
+    all_files = `svn ls --depth infinity`.split("\n")
+
+    s.files = all_files
+    s.test_files = all_files.grep(/^(test|spec|features)/)
+    s.executables = all_files.grep(/^bin/)
+  end
+
+  s.require_paths = %w[lib ext]
 
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec", "~>2.6.0"
