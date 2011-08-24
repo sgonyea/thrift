@@ -28,6 +28,6 @@ Gem::Specification.new do |s|
   # s.add_runtime_dependency "rest-client"
 
   s.add_development_dependency "rake"
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec", "~>2.6.0"
   s.add_development_dependency "srv"
 end
