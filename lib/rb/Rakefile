@@ -30,7 +30,10 @@ def thrift_path
     thrift = ENV['THRIFT'] || '../../compiler/cpp/thrift'
 
     unless File.exist?(thrift)
-      puts "Warning: The THRIFT binary does not appear to exist. Either build thrift or set $THRIFT (ie, export THRIFT=`which thrift`)"
+      puts "Warning: The THRIFT binary does not appear to be compiled. Trying your $PATH."
+
+      thrift = `which thrift`
+      raise "A thrift binary cannot be found on your $PATH. Aborting." if thrift.empty?
     end
 
     thrift
