@@ -18,7 +18,7 @@
 #
 
 require 'spec_helper'
-require File.dirname(__FILE__) + "/socket_spec_shared"
+require Bundler.root.join('spec/thrift/transport/socket_spec_shared')
 
 module Thrift
   describe "ThriftSocketSpec" do

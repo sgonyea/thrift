@@ -18,7 +18,7 @@
 #
 
 require 'spec_helper'
-require Bundler.root.join('spec/thrift/binary_protocol_spec_shared')
+require Bundler.root.join('spec/thrift/protocol/binary_protocol_spec_shared')
 
 describe Thrift do
   include Thrift
