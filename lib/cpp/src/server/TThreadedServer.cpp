@@ -70,12 +70,14 @@ public:
           break;
         }
       }
-    } catch (TTransportException& ttx) {
-      string errStr = string("TThreadedServer client died: ") + ttx.what();
-      GlobalOutput(errStr.c_str());
-    } catch (TException& x) {
-      string errStr = string("TThreadedServer exception: ") + x.what();
-      GlobalOutput(errStr.c_str());
+    } catch (const TTransportException& ttx) {
+      if (ttx.getType() != TTransportException::END_OF_FILE) {
+        string errStr = string("TThreadedServer client died: ") + ttx.what();
+        GlobalOutput(errStr.c_str());
+      }
+    } catch (const std::exception &x) {
+      GlobalOutput.printf("TThreadedServer exception: %s: %s",
+                          typeid(x).name(), x.what());
     } catch (...) {
       GlobalOutput("TThreadedServer uncaught exception.");
     }

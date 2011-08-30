@@ -102,12 +102,12 @@ void TSimpleServer::serve() {
           break;
         }
       }
-    } catch (TTransportException& ttx) {
+    } catch (const TTransportException& ttx) {
       string errStr = string("TSimpleServer client died: ") + ttx.what();
       GlobalOutput(errStr.c_str());
-    } catch (TException& tx) {
-      string errStr = string("TSimpleServer exception: ") + tx.what();
-      GlobalOutput(errStr.c_str());
+    } catch (const std::exception& x) {
+      GlobalOutput.printf("TSimpleServer exception: %s: %s",
+                          typeid(x).name(), x.what());
     } catch (...) {
       GlobalOutput("TSimpleServer uncaught exception.");
     }
@@ -117,20 +117,23 @@ void TSimpleServer::serve() {
 
     try {
       inputTransport->close();
-    } catch (TTransportException& ttx) {
-      string errStr = string("TSimpleSimple input close failed: ") + ttx.what();
+    } catch (const TTransportException& ttx) {
+      string errStr = string("TSimpleServer input close failed: ")
+        + ttx.what();
       GlobalOutput(errStr.c_str());
     }
     try {
       outputTransport->close();
-    } catch (TTransportException& ttx) {
-      string errStr = string("TSimpleSimple output close failed: ") + ttx.what();
+    } catch (const TTransportException& ttx) {
+      string errStr = string("TSimpleServer output close failed: ")
+        + ttx.what();
       GlobalOutput(errStr.c_str());
     }
     try {
       client->close();
-    } catch (TTransportException& ttx) {
-      string errStr = string("TSimpleSimple client close failed: ") + ttx.what();
+    } catch (const TTransportException& ttx) {
+      string errStr = string("TSimpleServer client close failed: ")
+        + ttx.what();
       GlobalOutput(errStr.c_str());
     }
   }
