@@ -58,5 +58,6 @@ require 'thrift/server/nonblocking_server'
 require 'thrift/server/simple_server'
 require 'thrift/server/threaded_server'
 require 'thrift/server/thread_pool_server'
+require 'thrift/server/mutexable_thread_pool_server'
 
 require 'thrift/thrift_native'
