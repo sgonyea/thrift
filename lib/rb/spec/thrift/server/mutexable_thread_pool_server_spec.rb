@@ -3,26 +3,32 @@ require 'spec_helper'
 describe Thrift::MutexableThreadPoolServer do
   subject { Thrift::MutexableThreadPoolServer.new double('processor'), double('server_transport') }
 
-  def Thread.block=(block); @block = block; end
-  def Thread.block(&block)
-    self.block = block if block_given?
-    return(@block)
-  end
+  before(:all) {
+    class Thrift::Thread < ::Thread
+      def self.new(*args, &block)
+        self.block = block if block_given?
+        @block
+      end
 
-  around(:each) do |example|
-    new_method = Thread.method(:new)
-    Thread.send(:define_method, :new, &Thread.method(:block))
+      def self.block=(block)
+        @block = block
+      end
 
-    example.run
+      def self.block
+        @block
+      end
+    end
+  }
 
-    Thread.send(:define_method, :new, &new_method)
-  end
+  after(:all) {
+    Thrift.send(:remove_const, :Thread)
+  }
 
   let(:server)        { subject }
-  let(:thread_block)  { Thread.block }
+  let(:thread_block)  { Thrift::Thread.block }
   let(:queue_thread)  { proc { server.queue_thread }}
 
-  before(:each) { Thread.block = nil }
+  before(:each) { Thrift::Thread.block = nil }
 
   describe "#serve" do
     before(:each) {
@@ -113,7 +119,7 @@ describe Thrift::MutexableThreadPoolServer do
 
   describe "Inside the Thread Itself" do
     it "should only execute if run_loop? is true" do
-      server.should_receive(:run_loop?) { false }
+      server.should_receive(:run_loop?).once { false }
 
       server.queue_thread
 
