@@ -5,24 +5,16 @@ describe Thrift::MutexableThreadPoolServer do
 
   before(:all) {
     class Thrift::Thread < ::Thread
+      class << self; attr_accessor :block; end
+
       def self.new(*args, &block)
         self.block = block if block_given?
-        @block
-      end
-
-      def self.block=(block)
-        @block = block
-      end
-
-      def self.block
         @block
       end
     end
   }
 
-  after(:all) {
-    Thrift.send(:remove_const, :Thread)
-  }
+  after(:all) { Thrift.send(:remove_const, :Thread) }
 
   let(:server)        { subject }
   let(:thread_block)  { Thrift::Thread.block }
